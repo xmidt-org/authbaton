@@ -1,58 +1,98 @@
 # authbaton
 
-authbaton does something good.
-
-[![Build Status](https://travis-ci.com/xmidt-org/authbaton.svg?branch=main)](https://travis-ci.com/xmidt-org/authbaton)
+[![Build Status](https://github.com/xmidt-org/authbaton/workflows/CI/badge.svg)](https://github.com/xmidt-org/authbaton/actions)
 [![codecov.io](http://codecov.io/github/xmidt-org/authbaton/coverage.svg?branch=main)](http://codecov.io/github/xmidt-org/authbaton?branch=main)
 [![Go Report Card](https://goreportcard.com/badge/github.com/xmidt-org/authbaton)](https://goreportcard.com/report/github.com/xmidt-org/authbaton)
 [![Apache V2 License](http://img.shields.io/badge/license-Apache%20V2-blue.svg)](https://github.com/xmidt-org/authbaton/blob/main/LICENSE)
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmidt-org_PROJECT&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmidt-org_PROJECT)
 [![GitHub release](https://img.shields.io/github/release/xmidt-org/authbaton.svg)](CHANGELOG.md)
-[![PkgGoDev](https://pkg.go.dev/badge/github.com/xmidt-org/authbaton)](https://pkg.go.dev/github.com/xmidt-org/authbaton)
-
-## Setup
-
-1. Search and replace authbaton with your project name.
-1. Initialize `go.mod` file: `go mod init github.com/xmidt-org/authbaton`
-1. Add org teams to project (Settings > Manage Access): 
-    - xmidt-org/admins with Admin role
-    - xmidt-org/server-writers with Write role
-1. Manually create the first release.  After v0.0.1 exists, other releases will be made by automation after the CHANGELOG is updated to reflect a new version header and nothing under the Unreleased header.
-1. For libraries:
-    1. Add org workflows in dir `.github/workflows`: push, tag, and release. This can be done by going to the Actions tab for the repo on the github site.
-    1. Remove the following files/dirs: `.dockerignore`, `Dockerfile`, `Makefile`, `rpkg.macros`, `authbaton.yaml`, `deploy/`, and `conf/`.
-1. For applications:
-    1. Remove PkgGoDev badge from this file.
-    1. Add org workflows in dir `.github/workflows`: push, tag, release, and docker-release. This can be done by going to the Actions tab for the repo on the github site.
-    1. Add project name, `.ignore`, and `errors.txt` to `.gitignore` file.
-    1. Update `Dockerfile` - choose new ports to expose that no current XMiDT application is using.
-    1. Update `deploy/packaging/authbaton.spec` file to have a proper Summary and Description.
-    1. Update `conf/authbaton.service` file to have a proper Description.
-
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=xmidt-org_authbaton&metric=alert_status)](https://sonarcloud.io/dashboard?id=xmidt-org_authbaton)
 
 ## Summary
-
-Summary should be a small paragraph explanation of what this project does.
-
+AuthBaton is an authentication service for applications behind a reverse proxy.
 ## Table of Contents
 
 - [Code of Conduct](#code-of-conduct)
 - [Details](#details)
-- [Install](#install)
+- [Usage](#usage)
+- [Build](#build)
+- [Deploy](#deploy)
 - [Contributing](#contributing)
 
 ## Code of Conduct
 
-This project and everyone participating in it are governed by the [XMiDT Code Of Conduct](https://xmidt.io/code_of_conduct/). 
+This project and everyone participating in it are governed by the [XMiDT Code Of Conduct](https://xmidt.io/docs/community/code_of_conduct/). 
 By participating, you agree to this Code.
 
 ## Details
+AuthBaton is meant to be used as a helper authentication microservice to reverse proxy tools such as NGINX.
 
-Add details here.
+The diagram below shows the path that a request follows before reaching the protected application.  
+![Diagram](docs/diagrams/Auth-baton%20Success%20Auth%20Flow.png)
+## Usage
+```
+curl http://localhost:6800/api/v1/auth -i
+HTTP/1.1 403 Forbidden
+X-Server-Name: authbaton
+X-Server-Version: development
+Date: Mon, 05 Apr 2021 21:18:24 GMT
+Content-Length: 0
+Connection: close
+```
 
-## Install
+```
+curl http://localhost:6800/api/v1/auth -H "Authorization: Basic dXNlcjpwYXNz" -i
+HTTP/1.1 200 OK
+X-Server-Name: authbaton
+X-Server-Version: development
+Date: Mon, 05 Apr 2021 21:21:46 GMT
+Content-Length: 0
+Connection: close
+```
 
-Add details here.
+
+## Build
+### Source
+In order to build from source, you need a working 1.x Go environment. Find more information on [Go website](https://golang.org/doc/install).
+
+Then, clone the repo and build using make:
+
+```bash
+git clone git@github.com:xmidt-org/authbaton.git
+cd authbaton
+make build
+```
+
+### Makefile
+
+The Makefile has the following options you may find helpful:
+* `make build`: builds the authbaton binary
+* `make test`: runs unit tests with coverage for authbaton
+* `make clean`: deletes previously-built binaries and object files
+
+### RPM
+
+First have a local clone of the source and go into the root directory of the 
+repository.  Then use rpkg to build the rpm:
+```bash
+rpkg srpm --spec <repo location>/<spec file location in repo>
+rpkg -C <repo location>/.config/rpkg.conf sources --outdir <repo location>'
+```
+
+## Deploy
+Once the binary is built, run:
+```
+./authbaton
+```
+Ensure that the `authbaton.yaml` config file is in one of the following folders:
+- The current working directory
+- `$HOME/.authbaton`
+- `/etc/authbaton`
+
+
+### Supported Reverse Proxies
+We currently have an example configuration file only for NGINX. However, any reverse proxy that can authenticate an external request by consulting authbaton is supported.
+
+See example configurations [here](/docs/example-config). We are happy to take contributions for example config files for other reverse proxies. 
 
 ## Contributing
 

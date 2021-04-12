@@ -1,5 +1,5 @@
 [Unit]
-Description=authbaton description here
+Description=Authentication service for apps behind a reverse proxy 
 After=network.target remote-fs.target nss-lookup.target
 
 [Service]

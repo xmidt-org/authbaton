@@ -1,0 +1,65 @@
+---
+prometheus:
+  defaultNamespace: xmidt
+  defaultSubsystem: authbaton
+  constLabels:
+    development: "true"
+
+log:
+  file: stdout
+  level: DEBUG
+
+health:
+  disableLogging: false
+  custom:
+    server: development
+
+servers:
+  primary:
+    address: localhost:6800
+    disableHTTPKeepAlives: true
+    header:
+      X-Server-Name:
+        - authbaton
+      X-Server-Version:
+        - development
+  metrics:
+    address: localhost:6801
+    disableHTTPKeepAlives: true
+    header:
+      X-Server-Name:
+        - authbaton
+      X-Server-Version:
+        - development
+
+  health:
+    address: localhost:6802
+    disableHTTPKeepAlives: true
+    header:
+      X-Server-Name:
+        - authbaton
+      X-Server-Version:
+        - development
+
+
+##############################################################################
+# Authorization Credentials
+##############################################################################
+authx:
+  inbound:
+    profiles:
+      -
+        # targetServers is the list of servers this bascule profile should be applied to.
+        targetServers: [primary]
+
+        # basic is a list of Basic Auth credentials intended to be used for local testing purposes.
+        # WARNING! Be sure to remove this from your production config.
+        basic: ["dXNlcjpwYXNz"]
+
+        # bearer contains all the configuration needed for a JWT validator.
+        bearer: 
+          keys:
+            Factory:
+                uri: "http://localhost:6500/keys/docker"
+            purpose: 0
+            updateInterval: 24h

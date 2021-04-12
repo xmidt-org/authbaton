@@ -29,6 +29,7 @@ If you contribute anything that changes the behavior of the application,
 document it in the follow places as applicable:
 * the code itself, through clear comments and unit tests
 * [README](README.md)
+* [the configuration](authbaton.yaml)
 
 This includes new features, additional variants of behavior, and breaking 
 changes.
