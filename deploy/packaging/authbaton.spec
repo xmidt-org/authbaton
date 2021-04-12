@@ -4,7 +4,7 @@
 Name:       authbaton
 Version:    {{{ git_tag_version }}}
 Release:    1%{?dist}
-Summary:    authbaton summary here.
+Summary:    An authentication service for apps behind a reverse proxy.
 
 Vendor:     Comcast
 Packager:   Comcast
@@ -20,7 +20,7 @@ BuildRequires: golang >= 1.15
 BuildRequires: git
 
 %description
-authbaton description here.
+AuthBaton is a configuration-driven authentication service for applications behind a reverse proxy. It is meant to be deployed in a side-car pattern.
 
 %prep
 %setup -q
