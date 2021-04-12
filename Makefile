@@ -1,11 +1,9 @@
-.PHONY: default build test style docker binaries clean
-
+.PHONY: default build test style binaries clean
 
 DOCKER       ?= docker
 GO           ?= go
 GOFMT        ?= $(GO)fmt
-APP          := __PROJECT__
-DOCKER_ORG   := xmidt
+APP          := authbaton
 
 VERSION ?= $(shell git describe --tag --always --dirty)
 PROGVER ?= $(shell git describe --tags `git rev-list --tags --max-count=1` | tail -1 | sed 's/v\(.*\)/\1/')
@@ -35,11 +33,6 @@ build:
 release: build
 	upx $(APP)
 
-docker:
-	-$(DOCKER) rmi "$(APP):$(VERSION)"
-	-$(DOCKER) rmi "$(APP):latest"
-	$(DOCKER) build -t "$(APP):$(VERSION)" -t "$(APP):latest" .
-
 binaries: generate
 	mkdir -p ./.ignore
 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 $(GO) build -o ./.ignore/$(APP)-$(PROGVER).darwin-amd64 -ldflags "-X 'main.BuildTime=$(BUILDTIME)' -X main.GitCommit=$(GITCOMMIT) -X main.Version=$(VERSION)"
@@ -50,4 +43,3 @@ binaries: generate
 
 clean:
 	-rm -r .ignore/ $(APP) errors.txt report.json coverage.txt
-
