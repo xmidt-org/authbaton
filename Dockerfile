@@ -25,10 +25,10 @@ RUN make test release
 FROM alpine:3.12.1
 
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /src/__PROJECT__ /src/__PROJECT__.yaml /src/deploy/packaging/entrypoint.sh /go/bin/spruce /src/Dockerfile /src/NOTICE /src/LICENSE /src/CHANGELOG.md /
-COPY --from=builder /src/deploy/packaging/__PROJECT__.yaml /tmp/__PROJECT__.yaml
+COPY --from=builder /src/authbaton /src/authbaton.yaml /src/deploy/packaging/entrypoint.sh /go/bin/spruce /src/Dockerfile /src/NOTICE /src/LICENSE /src/CHANGELOG.md /
+COPY --from=builder /src/deploy/packaging/authbaton.yaml /tmp/authbaton.yaml
 
-RUN mkdir /etc/__PROJECT__/ && touch /etc/__PROJECT__/__PROJECT__.yaml && chmod 666 /etc/__PROJECT__/__PROJECT__.yaml
+RUN mkdir /etc/authbaton/ && touch /etc/authbaton/authbaton.yaml && chmod 666 /etc/authbaton/authbaton.yaml
 
 USER nobody
 
@@ -39,4 +39,4 @@ EXPOSE 6601
 EXPOSE 6602
 EXPOSE 6603
 
-CMD ["/__PROJECT__"]
+CMD ["/authbaton"]
