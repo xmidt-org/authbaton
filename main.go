@@ -25,7 +25,6 @@ import (
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/xmidt-org/argus/auth"
-	"github.com/xmidt-org/argus/store/db"
 	"github.com/xmidt-org/argus/store/db/metric"
 	"github.com/xmidt-org/themis/xmetrics/xmetricshttp"
 	"github.com/xmidt-org/webpa-common/basculechecks"
@@ -113,7 +112,6 @@ func main() {
 			config.ProvideViper(setupViper),
 			xlog.Unmarshal("log"),
 			xloghttp.ProvideStandardBuilders,
-			db.Provide,
 			xhealth.Unmarshal("health"),
 			provideServerChainFactory,
 			xmetricshttp.Unmarshal("prometheus", promhttp.HandlerOpts{}),
