@@ -133,12 +133,6 @@ func main() {
 	}
 }
 
-// Provide the constants in the main package for other uber fx components to use.
-type ConstOut struct {
-	fx.Out
-	APIBase string `name:"api_base"`
-}
-
 func backwardsCompatibleLogger(l *zap.Logger) log.Logger {
 	return sallustkit.Logger{
 		Zap: l,
