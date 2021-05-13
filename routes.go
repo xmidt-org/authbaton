@@ -23,102 +23,53 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/xmidt-org/themis/xhealth"
-	"github.com/xmidt-org/themis/xhttp/xhttpserver"
-	"github.com/xmidt-org/themis/xmetrics"
-	"github.com/xmidt-org/themis/xmetrics/xmetricshttp"
+	"github.com/xmidt-org/httpaux"
+	"github.com/xmidt-org/touchstone/touchhttp"
 	"go.uber.org/fx"
 )
 
-type ServerChainIn struct {
-	fx.In
-
-	RequestCount     *prometheus.CounterVec   `name:"server_request_count"`
-	RequestDuration  *prometheus.HistogramVec `name:"server_request_duration_ms"`
-	RequestsInFlight *prometheus.GaugeVec     `name:"server_requests_in_flight"`
-}
-
-func provideServerChainFactory(in ServerChainIn) xhttpserver.ChainFactory {
-	return xhttpserver.ChainFactoryFunc(func(name string, o xhttpserver.Options) (alice.Chain, error) {
-		var (
-			curryLabel = prometheus.Labels{
-				ServerLabel: name,
-			}
-
-			serverLabellers = xmetricshttp.NewServerLabellers(
-				xmetricshttp.CodeLabeller{},
-				xmetricshttp.MethodLabeller{},
-			)
-		)
-
-		requestCount, err := in.RequestCount.CurryWith(curryLabel)
-		if err != nil {
-			return alice.Chain{}, err
-		}
-
-		requestDuration, err := in.RequestDuration.CurryWith(curryLabel)
-		if err != nil {
-			return alice.Chain{}, err
-		}
-
-		requestsInFlight, err := in.RequestsInFlight.CurryWith(curryLabel)
-		if err != nil {
-			return alice.Chain{}, err
-		}
-
-		return alice.New(
-			xmetricshttp.HandlerCounter{
-				Metric:   xmetrics.LabelledCounterVec{CounterVec: requestCount},
-				Labeller: serverLabellers,
-			}.Then,
-			xmetricshttp.HandlerDuration{
-				Metric:   xmetrics.LabelledObserverVec{ObserverVec: requestDuration},
-				Labeller: serverLabellers,
-			}.Then,
-			xmetricshttp.HandlerInFlight{
-				Metric: xmetrics.LabelledGaugeVec{GaugeVec: requestsInFlight},
-			}.Then,
-		), nil
-	})
-}
-
 type PrimaryRouterIn struct {
 	fx.In
-	Router    *mux.Router `name:"servers.primary"`
+	Router    *mux.Router `name:"server_primary"`
+	APIBase   string      `name:"api_base"`
 	AuthChain alice.Chain `name:"primary_auth_chain"`
-}
-
-func BuildPrimaryRoutes(in PrimaryRouterIn) {
-	in.Router.Use(in.AuthChain.Then)
-
-	okHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-	})
-
-	in.Router.Handle(fmt.Sprintf("/%s/auth", apiBase), okHandler)
 }
 
 type MetricsRoutesIn struct {
 	fx.In
-	Router  *mux.Router `name:"servers.metrics"`
-	Handler xmetricshttp.Handler
+	Router  *mux.Router `name:"server_metrics"`
+	Handler touchhttp.Handler
 }
 
-func BuildMetricsRoutes(in MetricsRoutesIn) {
-	if in.Router != nil && in.Handler != nil {
+type PrimaryMMIn struct {
+	fx.In
+	Primary alice.Chain `name:"middleware_primary_metrics"`
+}
+
+type HealthMMIn struct {
+	fx.In
+	Health alice.Chain `name:"middleware_health_metrics"`
+}
+
+type MetricMiddlewareOut struct {
+	fx.Out
+	Primary alice.Chain `name:"middleware_primary_metrics"`
+	Health  alice.Chain `name:"middleware_health_metrics"`
+}
+
+func buildPrimaryRoutes(in PrimaryRouterIn) {
+	in.Router.Use(in.AuthChain.Then)
+	in.Router.Handle(fmt.Sprintf("/%s/auth", apiBase), httpaux.ConstantHandler{StatusCode: http.StatusOK})
+}
+
+func buildMetricsRoutes(in MetricsRoutesIn) {
+	if in.Handler != nil {
 		in.Router.Handle("/metrics", in.Handler).Methods("GET")
 	}
 }
 
-type HealthRoutesIn struct {
-	fx.In
-	Router  *mux.Router `name:"servers.health"`
-	Handler xhealth.Handler
-}
-
-func BuildHealthRoutes(in HealthRoutesIn) {
-	if in.Router != nil && in.Handler != nil {
-		in.Router.Handle("/health", in.Handler).Methods("GET")
-	}
+func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
+	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
+	out.Health = alice.New(bundle.ForServer("server_health").Then)
+	return
 }
