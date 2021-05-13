@@ -31,7 +31,6 @@ import (
 type PrimaryRouterIn struct {
 	fx.In
 	Router    *mux.Router `name:"server_primary"`
-	APIBase   string      `name:"api_base"`
 	AuthChain alice.Chain `name:"primary_auth_chain"`
 }
 

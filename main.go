@@ -70,11 +70,10 @@ func main() {
 		fx.Supply(v),
 		touchstone.Provide(),
 		touchhttp.Provide(),
-		basculemetrics.ProvideMetricsVec(), // should be gone soon
-		basculechecks.ProvideMetricsVec(),  // should be gone soon
+		basculemetrics.ProvideMetricsVec(),
+		basculechecks.ProvideMetricsVec(),
 		auth.ProvidePrimaryServerChain(apiBase),
 		fx.Provide(
-			consts,
 			backwardsCompatibleMetricFactory("prometheus"),
 			backwardsCompatibleUnmarshaller,
 			backwardsCompatibleLogger,
@@ -138,12 +137,6 @@ func main() {
 type ConstOut struct {
 	fx.Out
 	APIBase string `name:"api_base"`
-}
-
-func consts() ConstOut {
-	return ConstOut{
-		APIBase: apiBase,
-	}
 }
 
 func backwardsCompatibleLogger(l *zap.Logger) log.Logger {
