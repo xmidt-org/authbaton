@@ -73,9 +73,9 @@ func main() {
 		basculechecks.ProvideMetricsVec(),  // should be gone soon
 		auth.ProvidePrimaryServerChain(apiBase),
 		fx.Provide(
-			Unmarshal("prometheus"), // should be gone soon
 			consts,
-			backswardsCompatibleUnmarshaller,
+			backwardsCompatibleMetricFactory("prometheus"),
+			backwardsCompatibleUnmarshaller,
 			backwardsCompatibleLogger,
 			auth.ProfilesUnmarshaler{
 				ConfigKey:        "authx.inbound.profiles",
@@ -151,16 +151,13 @@ func backwardsCompatibleLogger(l *zap.Logger) log.Logger {
 	}
 }
 
-func backswardsCompatibleUnmarshaller(v *viper.Viper) config.Unmarshaller {
+func backwardsCompatibleUnmarshaller(v *viper.Viper) config.Unmarshaller {
 	return config.ViperUnmarshaller{
 		Viper: v,
 	}
 }
 
-// Unmarshal produces an uber/fx provider that bootstraps a prometheus-based metrics environment.
-// No HTTP initialization is done by this package.  To obtain a prometheus handler, use xmetricshttp.Unmarshal,
-// which invokes this method in addition to the HTTP initialization.
-func Unmarshal(configKey string) func(xmetrics.MetricsIn) (xmetrics.Factory, error) {
+func backwardsCompatibleMetricFactory(configKey string) func(xmetrics.MetricsIn) (xmetrics.Factory, error) {
 	return func(in xmetrics.MetricsIn) (xmetrics.Factory, error) {
 		var o xmetrics.Options
 		if err := in.Unmarshaller.UnmarshalKey(configKey, &o); err != nil {
