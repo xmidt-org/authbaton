@@ -29,6 +29,7 @@ import (
 	"github.com/xmidt-org/argus/auth"
 	"github.com/xmidt-org/arrange"
 	"github.com/xmidt-org/arrange/arrangehttp"
+	"github.com/xmidt-org/bascule/basculehttp"
 	"github.com/xmidt-org/httpaux"
 	"github.com/xmidt-org/sallust/sallustkit"
 	"github.com/xmidt-org/themis/config"
@@ -82,7 +83,12 @@ func main() {
 				SupportedServers: []string{"primary"}}.Annotated(),
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
+			arrange.UnmarshalKey("onErrorHTTPResponse", OnErrorHTTPResponseOption{}),
 			metricMiddleware,
+			fx.Annotated{
+				Name:   "primary_bascule_on_error_http_response",
+				Target: onErrorHTTPResponse,
+			},
 		),
 
 		arrangehttp.Server{
@@ -159,4 +165,31 @@ func backwardsCompatibleMetricFactory(configKey string) func(xmetrics.MetricsIn)
 
 		return registry, nil
 	}
+}
+
+type OnErrorHTTPResponseOption struct {
+	AuthType string
+}
+
+func (o OnErrorHTTPResponseOption) GetAuthType() string {
+	if o.AuthType == "" {
+		return string(basculehttp.BearerAuthorization)
+	}
+	return o.AuthType
+}
+
+func onErrorHTTPResponse(config OnErrorHTTPResponseOption) (basculehttp.OnErrorHTTPResponse, error) {
+	authType := config.GetAuthType()
+	if authType != "Bearer" && authType != "Basic" {
+		return nil, fmt.Errorf("Value not supported: '%s'. Available options are 'Bearer' and 'Basic'.", authType)
+	}
+	return func(w http.ResponseWriter, reason basculehttp.ErrorResponseReason) {
+		switch reason {
+		case basculehttp.ChecksNotFound, basculehttp.ChecksFailed:
+			w.WriteHeader(http.StatusForbidden)
+		default:
+			w.Header().Set(basculehttp.AuthTypeHeaderKey, authType)
+			w.WriteHeader(http.StatusUnauthorized)
+		}
+	}, nil
 }

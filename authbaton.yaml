@@ -71,3 +71,11 @@ authx:
                 uri: "http://localhost:6500/keys/docker"
             purpose: 0
             updateInterval: 24h
+
+# onErrorHTTPResponse provides the option to decide which authentication type
+# is requested through the 'WWW-Authenticate' HTTP response header. Note that 
+# this header is returned along a 401 when an Authorization header was not included
+# in an inbound HTTP request.
+# (Optional). authType defaults to 'Bearer'. Supported values are "Basic" and "Bearer".
+onErrorHTTPResponse:
+  authType: "Basic" 

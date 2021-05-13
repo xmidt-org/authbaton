@@ -16,7 +16,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/xmidt-org/argus v0.3.16-0.20210512193609-2d99e7624ccc
 	github.com/xmidt-org/arrange v0.3.0
-	github.com/xmidt-org/bascule v0.9.1-0.20210512203746-5a74a01b9d83 // indirect
+	github.com/xmidt-org/bascule v0.9.1-0.20210512203746-5a74a01b9d83
 	github.com/xmidt-org/httpaux v0.2.1
 	github.com/xmidt-org/sallust v0.1.5
 	github.com/xmidt-org/themis v0.4.7
