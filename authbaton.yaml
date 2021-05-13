@@ -4,10 +4,18 @@ prometheus:
   defaultSubsystem: authbaton
   constLabels:
     development: "true"
+  handler:
+    maxRequestsInFlight: 5
+    timeout: 5s
+    instrumentMetricHandler: true
 
-log:
-  file: stdout
-  level: DEBUG
+# configures go.uber.org/zap
+logging:
+  level: debug
+  development: true
+  encoderConfig:
+    messageKey: msg
+    levelKey: level
 
 health:
   disableLogging: false
@@ -23,6 +31,7 @@ servers:
         - authbaton
       X-Server-Version:
         - development
+
   metrics:
     address: localhost:6801
     disableHTTPKeepAlives: true
@@ -40,7 +49,6 @@ servers:
         - authbaton
       X-Server-Version:
         - development
-
 
 ##############################################################################
 # Authorization Credentials
