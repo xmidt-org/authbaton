@@ -18,6 +18,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -122,10 +123,10 @@ func main() {
 		),
 	)
 
-	switch err := app.Err(); err {
-	case pflag.ErrHelp:
+	switch err := app.Err(); {
+	case errors.Is(err, pflag.ErrHelp):
 		return
-	case nil:
+	case err == nil:
 		app.Run()
 	default:
 		fmt.Fprintln(os.Stderr, err)
