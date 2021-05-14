@@ -6,6 +6,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Start migrating away from Themis sub-packages. [#6](https://github.com/xmidt-org/authbaton/pull/6)
+- Add option for bascule OnErrorHTTPResponse. [#9](https://github.com/xmidt-org/authbaton/pull/9)
 
 ## [v0.0.1]
 - Initial creation
