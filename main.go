@@ -181,7 +181,7 @@ func (o OnErrorHTTPResponseOption) GetAuthType() string {
 func onErrorHTTPResponse(config OnErrorHTTPResponseOption) (basculehttp.OnErrorHTTPResponse, error) {
 	authType := config.GetAuthType()
 	if authType != "Bearer" && authType != "Basic" {
-		return nil, fmt.Errorf("Value not supported: '%s'. Available options are 'Bearer' and 'Basic'.", authType)
+		return nil, fmt.Errorf("value not supported: '%s'. Available options are 'Bearer' and 'Basic'", authType)
 	}
 	return func(w http.ResponseWriter, reason basculehttp.ErrorResponseReason) {
 		switch reason {
