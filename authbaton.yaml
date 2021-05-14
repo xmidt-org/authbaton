@@ -78,4 +78,4 @@ authx:
 # in an inbound HTTP request.
 # (Optional). authType defaults to 'Bearer'. Supported values are "Basic" and "Bearer".
 onErrorHTTPResponse:
-  authType: "Basic" 
+  authType: "Basic"

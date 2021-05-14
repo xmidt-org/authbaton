@@ -171,24 +171,16 @@ type OnErrorHTTPResponseOption struct {
 	AuthType string
 }
 
-func (o OnErrorHTTPResponseOption) GetAuthType() string {
-	if o.AuthType == "" {
-		return string(basculehttp.BearerAuthorization)
-	}
-	return o.AuthType
-}
-
 func onErrorHTTPResponse(config OnErrorHTTPResponseOption) (basculehttp.OnErrorHTTPResponse, error) {
-	authType := config.GetAuthType()
-	if authType != "Bearer" && authType != "Basic" {
-		return nil, fmt.Errorf("value not supported: '%s'. Available options are 'Bearer' and 'Basic'", authType)
+	if config.AuthType != "Bearer" && config.AuthType != "Basic" {
+		return nil, fmt.Errorf("value not supported: '%s'. Available options are 'Bearer' and 'Basic'", config.AuthType)
 	}
 	return func(w http.ResponseWriter, reason basculehttp.ErrorResponseReason) {
 		switch reason {
 		case basculehttp.ChecksNotFound, basculehttp.ChecksFailed:
 			w.WriteHeader(http.StatusForbidden)
 		default:
-			w.Header().Set(basculehttp.AuthTypeHeaderKey, authType)
+			w.Header().Set(basculehttp.AuthTypeHeaderKey, config.AuthType)
 			w.WriteHeader(http.StatusUnauthorized)
 		}
 	}, nil
