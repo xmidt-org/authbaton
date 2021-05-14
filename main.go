@@ -82,7 +82,12 @@ func main() {
 				SupportedServers: []string{"primary"}}.Annotated(),
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
+			arrange.UnmarshalKey("onErrorHTTPResponse", OnErrorHTTPResponseOption{AuthType: "Bearer"}),
 			metricMiddleware,
+			fx.Annotated{
+				Name:   "primary_bascule_on_error_http_response",
+				Target: onErrorHTTPResponse,
+			},
 		),
 
 		arrangehttp.Server{
