@@ -707,6 +707,10 @@ github.com/xmidt-org/argus v0.3.16 h1:8lfA0PF7xWse/l8Z5TnU4oTk3FfXHoqxEP1vbBKPLJ
 github.com/xmidt-org/argus v0.3.16/go.mod h1:UIv6/QgIxBdcw4Jx+femCTJaUfUcQWkMLw1AZduDCDA=
 github.com/xmidt-org/argus v0.3.17-0.20210520233743-51bd2a35ce84 h1:g7c056E5kUmnG+1u5fBIwRVNHiJglL9WOMkSnM/zd1U=
 github.com/xmidt-org/argus v0.3.17-0.20210520233743-51bd2a35ce84/go.mod h1:UIv6/QgIxBdcw4Jx+femCTJaUfUcQWkMLw1AZduDCDA=
+github.com/xmidt-org/argus v0.3.17-0.20210521214027-ca06edafc7f1 h1:BhjZ2ZlL85eMn2ifzU7hVDpYctqWVb8BeMz2mvhCsnE=
+github.com/xmidt-org/argus v0.3.17-0.20210521214027-ca06edafc7f1/go.mod h1:UIv6/QgIxBdcw4Jx+femCTJaUfUcQWkMLw1AZduDCDA=
+github.com/xmidt-org/argus v0.3.17-0.20210521220421-b9b8c09c74da h1:qJDS0Fs5uQyjZMaz1FQAErgzTqyQaMpE/QFUMPqR32Y=
+github.com/xmidt-org/argus v0.3.17-0.20210521220421-b9b8c09c74da/go.mod h1:WjGUwW/KI3wTw9BH6+IQeEGA/sBYq0kmfdRdESiCRTA=
 github.com/xmidt-org/arrange v0.1.9 h1:MgMCRH7uMg+LZWvuo3c+63UmEV73LRMyrYmm267E8oM=
 github.com/xmidt-org/arrange v0.1.9/go.mod h1:PRA8iEZ11L93NsEkDP56x1mZyfDcWxzDULgHj56TaEk=
 github.com/xmidt-org/arrange v0.3.0 h1:YNO+1lufCx3EeN17xuSRMC1sci9y9rzZVZ+TkWwq9QE=

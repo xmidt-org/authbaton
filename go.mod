@@ -14,7 +14,7 @@ require (
 	github.com/spf13/viper v1.7.1
 	github.com/stretchr/objx v0.3.0 // indirect
 	github.com/stretchr/testify v1.7.0
-	github.com/xmidt-org/argus v0.3.17-0.20210520233743-51bd2a35ce84
+	github.com/xmidt-org/argus v0.3.17-0.20210521220421-b9b8c09c74da
 	github.com/xmidt-org/arrange v0.3.0
 	github.com/xmidt-org/bascule v0.9.1-0.20210512203746-5a74a01b9d83
 	github.com/xmidt-org/httpaux v0.2.1
