@@ -18,7 +18,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -58,7 +57,7 @@ type MetricMiddlewareOut struct {
 
 func buildPrimaryRoutes(in PrimaryRouterIn) {
 	in.Router.Use(in.AuthChain.Then)
-	in.Router.Handle(fmt.Sprintf("/%s/auth", apiBase), httpaux.ConstantHandler{StatusCode: http.StatusOK})
+	in.Router.PathPrefix("/").Handler(httpaux.ConstantHandler{StatusCode: http.StatusOK})
 }
 
 func buildMetricsRoutes(in MetricsRoutesIn) {
