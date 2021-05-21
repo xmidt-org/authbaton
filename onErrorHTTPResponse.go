@@ -17,7 +17,7 @@ func onErrorHTTPResponse(config OnErrorHTTPResponseOption) (basculehttp.OnErrorH
 	}
 	return func(w http.ResponseWriter, reason basculehttp.ErrorResponseReason) {
 		switch reason {
-		case basculehttp.ChecksNotFound, basculehttp.ChecksFailed:
+		case basculehttp.ChecksNotFound, basculehttp.ChecksFailed, basculehttp.ParseFailed:
 			w.WriteHeader(http.StatusForbidden)
 		default:
 			w.Header().Set(basculehttp.AuthTypeHeaderKey, config.AuthType)
