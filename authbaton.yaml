@@ -116,4 +116,4 @@ parseURL:
   # URL path (i.e. removing "/api/v1/" from "/api/v1/relevantEndpoint") for
   # cross-checking endpoints and capabilities.
   # (Optional)
-  urlPathPrefix: "/" 
+  urlPathPrefix: "/"
