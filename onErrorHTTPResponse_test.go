@@ -35,6 +35,12 @@ func TestOnErrorHTTPResponse(t *testing.T) {
 			ExpectedCode: http.StatusForbidden,
 		},
 		{
+			Description:  "Parse failed",
+			AuthType:     "Bearer",
+			ErrReason:    basculehttp.ParseFailed,
+			ExpectedCode: http.StatusForbidden,
+		},
+		{
 			Description:  "No Authorization Header",
 			AuthType:     "Bearer",
 			ErrReason:    basculehttp.MissingHeader,
@@ -45,7 +51,7 @@ func TestOnErrorHTTPResponse(t *testing.T) {
 	for _, tc := range tcs {
 		t.Run(tc.Description, func(t *testing.T) {
 			assert := assert.New(t)
-			f, err := onErrorHTTPResponse(OnErrorHTTPResponseOption{AuthType: tc.AuthType})
+			f, err := onErrorHTTPResponse(onErrorHTTPResponseConfig{AuthType: tc.AuthType})
 			if tc.ShouldFail {
 				assert.NotNil(err)
 			} else {
