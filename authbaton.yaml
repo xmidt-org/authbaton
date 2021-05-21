@@ -110,9 +110,9 @@ authx:
 onErrorHTTPResponse:
   authType: "Basic"
 
-# urlParse provides options around the parsing of incoming request URLs by bascule.
-urlParse:
-  # URLParsePrefix helps bascule ignore a certain prefix from an incoming request 
+# parseURL provides options around the parsing of incoming request URLs by bascule.
+parseURL:
+  # urlParsePrefix helps bascule ignore a certain prefix from an incoming request 
   # URL path (i.e. removing "/api/v1/" from "/api/v1/relevantEndpoint") for
   # cross-checking endpoints and capabilities.
   # (Optional)

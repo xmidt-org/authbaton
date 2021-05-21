@@ -1,11 +1,13 @@
 package main
 
-import "github.com/xmidt-org/bascule/basculehttp"
+import (
+	"github.com/xmidt-org/bascule/basculehttp"
+)
 
-type parseURLOption struct {
+type parseURLConfig struct {
 	URLPathPrefix string
 }
 
-func parseURLFunc(o parseURLOption) basculehttp.ParseURL {
+func parseURLFunc(o parseURLConfig) basculehttp.ParseURL {
 	return basculehttp.CreateRemovePrefixURLFunc(o.URLPathPrefix, basculehttp.DefaultParseURLFunc)
 }

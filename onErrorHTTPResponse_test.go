@@ -51,7 +51,7 @@ func TestOnErrorHTTPResponse(t *testing.T) {
 	for _, tc := range tcs {
 		t.Run(tc.Description, func(t *testing.T) {
 			assert := assert.New(t)
-			f, err := onErrorHTTPResponse(OnErrorHTTPResponseOption{AuthType: tc.AuthType})
+			f, err := onErrorHTTPResponse(onErrorHTTPResponseConfig{AuthType: tc.AuthType})
 			if tc.ShouldFail {
 				assert.NotNil(err)
 			} else {
