@@ -83,10 +83,15 @@ func main() {
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
 			arrange.UnmarshalKey("onErrorHTTPResponse", OnErrorHTTPResponseOption{AuthType: "Bearer"}),
+			arrange.UnmarshalKey("parseURL", parseURLOption{}),
 			metricMiddleware,
 			fx.Annotated{
 				Name:   "primary_bascule_on_error_http_response",
 				Target: onErrorHTTPResponse,
+			},
+			fx.Annotated{
+				Name:   "primary_bascule_parse_url",
+				Target: parseURLFunc,
 			},
 		),
 
