@@ -1,7 +1,7 @@
 ## NGINX config
 `nginx.conf` is an example nginx configuration file that uses the [ngx_http_auth_request](http://nginx.org/en/docs/http/ngx_http_auth_request_module.html) module which allows NGINX to consult `auth-baton` before accepting a request.
 
-Assuming `auth-baton` is reachable @ `http://localhost:6800/api/v1/auth`, you can run nginx with the given configuration and send a few simple requests to see if the flow works:
+Assuming `auth-baton` is reachable @ `http://localhost:6800/`, you can run nginx with the given configuration and send a few simple requests to see if the flow works:
 
 Case (1): auth-baton rejects the request
 ```
@@ -18,7 +18,7 @@ curl http://localhost:8090 -H "Authorization: Basic xyz"
 
 Case (2) auth-baton authenticates the request
 ```
-curl http://localhost:8090 -H "Authorization: Basic dXNlcjpwYXNz"
+curl http://localhost:8090/edit/profile -H "Authorization: Basic dXNlcjpwYXNz"
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,4 +45,10 @@ Commercial support is available at
 </body>
 </html>
 ```
+
+**Note:** Since the original request path is reused, for this last request, the 
+underlying request to authbaton will look like:
+```
+curl http://localhost:6800/edit/profile -H "Authorization: Basic dXNlcjpwYXNz"
+``` 
 
