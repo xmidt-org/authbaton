@@ -30,7 +30,7 @@ The diagram below shows the path that a request follows before reaching the prot
 ![Diagram](docs/diagrams/Auth-baton%20Success%20Auth%20Flow.png)
 ## Usage
 ```
-curl http://localhost:6800/api/v1/auth -i
+curl http://localhost:6800 -i
 HTTP/1.1 403 Forbidden
 X-Server-Name: authbaton
 X-Server-Version: development
@@ -40,7 +40,7 @@ Connection: close
 ```
 
 ```
-curl http://localhost:6800/api/v1/auth -H "Authorization: Basic dXNlcjpwYXNz" -i
+curl http://localhost:6800/original/request/path -H "Authorization: Basic dXNlcjpwYXNz" -i
 HTTP/1.1 200 OK
 X-Server-Name: authbaton
 X-Server-Version: development
@@ -48,7 +48,8 @@ Date: Mon, 05 Apr 2021 21:21:46 GMT
 Content-Length: 0
 Connection: close
 ```
-
+**Note:** AuthBaton accepts any URL path. This allows bascule capability checks 
+to work properly as the reverse proxy can simply reuse the URL path of the original request.
 
 ## Build
 ### Source
