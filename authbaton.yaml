@@ -27,27 +27,27 @@ servers:
     address: localhost:6800
     disableHTTPKeepAlives: true
     header:
-      X-Server-Name:
+      X-Midt-Server:
         - authbaton
-      X-Server-Version:
+      X-Midt-Version:
         - development
 
   metrics:
     address: localhost:6801
     disableHTTPKeepAlives: true
     header:
-      X-Server-Name:
+      X-Midt-Server:
         - authbaton
-      X-Server-Version:
+      X-Midt-Version:
         - development
 
   health:
     address: localhost:6802
     disableHTTPKeepAlives: true
     header:
-      X-Server-Name:
+      X-Midt-Server:
         - authbaton
-      X-Server-Version:
+      X-Midt-Version:
         - development
 
 ##############################################################################
