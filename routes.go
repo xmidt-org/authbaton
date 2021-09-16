@@ -22,6 +22,8 @@ import (
 
 	"github.com/gorilla/mux"
 	"github.com/justinas/alice"
+	"github.com/xmidt-org/arrange"
+	"github.com/xmidt-org/arrange/arrangehttp"
 	"github.com/xmidt-org/httpaux"
 	"github.com/xmidt-org/touchstone/touchhttp"
 	"go.uber.org/fx"
@@ -69,4 +71,41 @@ func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
 	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
 	out.Health = alice.New(bundle.ForServer("server_health").Then)
 	return
+}
+
+func provideServers() fx.Option {
+	return fx.Options(
+		arrangehttp.Server{
+			Name: "server_primary",
+			Key:  "servers.primary",
+			Inject: arrange.Inject{
+				PrimaryMMIn{},
+			},
+		}.Provide(),
+		arrangehttp.Server{
+			Name: "server_health",
+			Key:  "servers.health",
+			Inject: arrange.Inject{
+				HealthMMIn{},
+			},
+			Invoke: arrange.Invoke{
+				func(r *mux.Router) {
+					r.Handle("/health", httpaux.ConstantHandler{
+						StatusCode: http.StatusOK,
+					}).Methods("GET")
+				},
+			},
+		}.Provide(),
+		arrangehttp.Server{
+			Name: "server_metrics",
+			Key:  "servers.metrics",
+		}.Provide(),
+		fx.Invoke(
+			serverValidator{Key: "servers.primary"}.Validate,
+			serverValidator{Key: "servers.metrics"}.Validate,
+			serverValidator{Key: "servers.health"}.Validate,
+			handlePrimaryEndpoint,
+			handledMetricEndpoint,
+		),
+	)
 }

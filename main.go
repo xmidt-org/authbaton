@@ -20,17 +20,12 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
 
 	"github.com/go-kit/kit/log"
-	"github.com/gorilla/mux"
 
 	"github.com/xmidt-org/argus/auth"
-	"github.com/xmidt-org/argus/store/db/metric"
 	"github.com/xmidt-org/arrange"
-	"github.com/xmidt-org/arrange/arrangehttp"
-	"github.com/xmidt-org/httpaux"
 	"github.com/xmidt-org/sallust/sallustkit"
 	"github.com/xmidt-org/touchstone"
 
@@ -65,7 +60,6 @@ func main() {
 		arrange.ForViper(v),
 		fx.Supply(logger),
 		fx.Supply(v),
-		metric.ProvideMetrics(),
 		auth.Provide("authx.inbound"),
 		touchstone.Provide(),
 		touchhttp.Provide(),
@@ -86,42 +80,7 @@ func main() {
 				Target: parseURLFunc,
 			},
 		),
-
-		arrangehttp.Server{
-			Name: "server_primary",
-			Key:  "servers.primary",
-			Inject: arrange.Inject{
-				PrimaryMMIn{},
-			},
-		}.Provide(),
-
-		arrangehttp.Server{
-			Name: "server_health",
-			Key:  "servers.health",
-			Inject: arrange.Inject{
-				HealthMMIn{},
-			},
-			Invoke: arrange.Invoke{
-				func(r *mux.Router) {
-					r.Handle("/health", httpaux.ConstantHandler{
-						StatusCode: http.StatusOK,
-					}).Methods("GET")
-				},
-			},
-		}.Provide(),
-
-		arrangehttp.Server{
-			Name: "server_metrics",
-			Key:  "servers.metrics",
-		}.Provide(),
-
-		fx.Invoke(
-			serverValidator{Key: "servers.primary"}.Validate,
-			serverValidator{Key: "servers.metrics"}.Validate,
-			serverValidator{Key: "servers.health"}.Validate,
-			handlePrimaryEndpoint,
-			handledMetricEndpoint,
-		),
+		provideServers(),
 	)
 
 	switch err := app.Err(); {
