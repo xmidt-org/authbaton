@@ -32,7 +32,6 @@ import (
 type PrimaryRouterIn struct {
 	fx.In
 	Router    *mux.Router `name:"server_primary"`
-	APIBase   string      `name:"api_base"`
 	AuthChain alice.Chain `name:"auth_chain"`
 }
 
@@ -75,6 +74,9 @@ func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
 
 func provideServers() fx.Option {
 	return fx.Options(
+		fx.Provide(
+			metricMiddleware,
+		),
 		arrangehttp.Server{
 			Name: "server_primary",
 			Key:  "servers.primary",

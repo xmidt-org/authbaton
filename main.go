@@ -24,7 +24,6 @@ import (
 
 	"github.com/go-kit/kit/log"
 
-	"github.com/xmidt-org/argus/auth"
 	"github.com/xmidt-org/arrange"
 	"github.com/xmidt-org/sallust/sallustkit"
 	"github.com/xmidt-org/touchstone"
@@ -60,7 +59,7 @@ func main() {
 		arrange.ForViper(v),
 		fx.Supply(logger),
 		fx.Supply(v),
-		auth.Provide("authx.inbound"),
+		provideAuth("authx.inbound"),
 		touchstone.Provide(),
 		touchhttp.Provide(),
 		fx.Provide(
@@ -68,17 +67,6 @@ func main() {
 			gokitLogger,
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
-			arrange.UnmarshalKey("onErrorHTTPResponse", onErrorHTTPResponseConfig{AuthType: "Bearer"}),
-			arrange.UnmarshalKey("parseURL", parseURLConfig{URLPathPrefix: "/"}),
-			metricMiddleware,
-			fx.Annotated{
-				Name:   "primary_bascule_on_error_http_response",
-				Target: onErrorHTTPResponse,
-			},
-			fx.Annotated{
-				Name:   "primary_bascule_parse_url",
-				Target: parseURLFunc,
-			},
 		),
 		provideServers(),
 	)
@@ -103,13 +91,11 @@ func gokitLogger(l *zap.Logger) log.Logger {
 // Provide the constants in the main package for other uber fx components to use.
 type ConstOut struct {
 	fx.Out
-	APIBase      string `name:"api_base"`
 	DefaultKeyID string `name:"default_key_id"`
 }
 
 func consts() ConstOut {
 	return ConstOut{
-		APIBase:      apiBase,
 		DefaultKeyID: defaultKeyID,
 	}
 }
