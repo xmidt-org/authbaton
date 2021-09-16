@@ -30,7 +30,8 @@ import (
 type PrimaryRouterIn struct {
 	fx.In
 	Router    *mux.Router `name:"server_primary"`
-	AuthChain alice.Chain `name:"primary_auth_chain"`
+	APIBase   string      `name:"api_base"`
+	AuthChain alice.Chain `name:"auth_chain"`
 }
 
 type MetricsRoutesIn struct {
@@ -55,15 +56,13 @@ type MetricMiddlewareOut struct {
 	Health  alice.Chain `name:"middleware_health_metrics"`
 }
 
-func buildPrimaryRoutes(in PrimaryRouterIn) {
+func handlePrimaryEndpoint(in PrimaryRouterIn) {
 	in.Router.Use(in.AuthChain.Then)
 	in.Router.PathPrefix("/").Handler(httpaux.ConstantHandler{StatusCode: http.StatusOK})
 }
 
-func buildMetricsRoutes(in MetricsRoutesIn) {
-	if in.Handler != nil {
-		in.Router.Handle("/metrics", in.Handler).Methods("GET")
-	}
+func handledMetricEndpoint(in MetricsRoutesIn) {
+	in.Router.Handle("/metrics", in.Handler).Methods("GET")
 }
 
 func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
