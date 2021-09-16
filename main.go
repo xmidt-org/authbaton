@@ -32,13 +32,11 @@ import (
 	"github.com/xmidt-org/arrange/arrangehttp"
 	"github.com/xmidt-org/httpaux"
 	"github.com/xmidt-org/sallust/sallustkit"
-	"github.com/xmidt-org/themis/config"
 	"github.com/xmidt-org/touchstone"
 
 	"github.com/xmidt-org/touchstone/touchhttp"
 
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 
 	"go.uber.org/fx"
 	"go.uber.org/zap"
@@ -47,6 +45,7 @@ import (
 const (
 	applicationName = "authbaton"
 	apiBase         = "api/v1"
+	defaultKeyID    = "current"
 )
 
 var (
@@ -73,7 +72,6 @@ func main() {
 		fx.Provide(
 			consts,
 			gokitLogger,
-			backwardsCompatibleUnmarshaller,
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
 			arrange.UnmarshalKey("onErrorHTTPResponse", onErrorHTTPResponseConfig{AuthType: "Bearer"}),
@@ -143,20 +141,16 @@ func gokitLogger(l *zap.Logger) log.Logger {
 	}
 }
 
-func backwardsCompatibleUnmarshaller(v *viper.Viper) config.Unmarshaller {
-	return config.ViperUnmarshaller{
-		Viper: v,
-	}
-}
-
 // Provide the constants in the main package for other uber fx components to use.
 type ConstOut struct {
 	fx.Out
-	APIBase string `name:"api_base"`
+	APIBase      string `name:"api_base"`
+	DefaultKeyID string `name:"default_key_id"`
 }
 
 func consts() ConstOut {
 	return ConstOut{
-		APIBase: apiBase,
+		APIBase:      apiBase,
+		DefaultKeyID: defaultKeyID,
 	}
 }
