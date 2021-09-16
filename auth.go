@@ -20,8 +20,8 @@ func provideAuth(configKey string) fx.Option {
 			parseURLFunc,
 		),
 		basculehttp.ProvideBasicAuth(configKey),
-		basculehttp.ProvideBearerTokenFactory(configKey, true),
-		basculechecks.ProvideRegexCapabilitiesValidator(fmt.Sprintf("%v.capabilities", configKey)),
+		basculehttp.ProvideBearerTokenFactory(fmt.Sprintf("%s.bearer", configKey), true),
+		basculechecks.ProvideRegexCapabilitiesValidator(fmt.Sprintf("%s.capabilities", configKey)),
 		basculehttp.ProvideBearerValidator(),
 		basculehttp.ProvideServerChain(),
 	)
