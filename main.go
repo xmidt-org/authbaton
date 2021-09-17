@@ -38,7 +38,6 @@ import (
 
 const (
 	applicationName = "authbaton"
-	apiBase         = "api/v1"
 	defaultKeyID    = "current"
 )
 
