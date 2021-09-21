@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/xmidt-org/themis/config"
+	"github.com/spf13/viper"
 )
 
 // sentinel validation errors
@@ -57,18 +57,18 @@ type serverValidator struct {
 }
 
 // Validate ensures the server's config is valid before initializing its HTTP server.
-func (v serverValidator) Validate(Unmarshaller config.Unmarshaller) error {
-	if !Unmarshaller.IsSet(v.Key) {
-		return serverValidationError{Err: errServerConfigMissing, Key: v.Key}
+func (sv serverValidator) Validate(v *viper.Viper) error {
+	if !v.IsSet(sv.Key) {
+		return serverValidationError{Err: errServerConfigMissing, Key: sv.Key}
 	}
 	var s server
-	err := Unmarshaller.UnmarshalKey(v.Key, &s)
+	err := v.UnmarshalKey(sv.Key, &s)
 	if err != nil {
-		return serverValidationError{Err: fmt.Errorf("%w: %v", errServerConfigUnmarshalFailure, err), Key: v.Key}
+		return serverValidationError{Err: fmt.Errorf("%w: %v", errServerConfigUnmarshalFailure, err), Key: sv.Key}
 	}
 	err = isLoopbackAddress(s.Address)
 	if err != nil {
-		return serverValidationError{Err: err, Key: v.Key}
+		return serverValidationError{Err: err, Key: sv.Key}
 	}
 	return nil
 }

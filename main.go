@@ -20,35 +20,21 @@ package main
 import (
 	"errors"
 	"fmt"
-	"net/http"
 	"os"
 
-	"github.com/go-kit/kit/log"
-	"github.com/gorilla/mux"
-
-	"github.com/xmidt-org/argus/auth"
 	"github.com/xmidt-org/arrange"
-	"github.com/xmidt-org/arrange/arrangehttp"
-	"github.com/xmidt-org/httpaux"
-	"github.com/xmidt-org/sallust/sallustkit"
-	"github.com/xmidt-org/themis/config"
-	"github.com/xmidt-org/themis/xmetrics"
 	"github.com/xmidt-org/touchstone"
-	"github.com/xmidt-org/webpa-common/basculechecks"
-	"github.com/xmidt-org/webpa-common/basculemetrics"
 
 	"github.com/xmidt-org/touchstone/touchhttp"
 
 	"github.com/spf13/pflag"
-	"github.com/spf13/viper"
 
 	"go.uber.org/fx"
-	"go.uber.org/zap"
 )
 
 const (
 	applicationName = "authbaton"
-	apiBase         = "api/v1"
+	defaultKeyID    = "current"
 )
 
 var (
@@ -68,68 +54,15 @@ func main() {
 		arrange.ForViper(v),
 		fx.Supply(logger),
 		fx.Supply(v),
+		provideAuth("authx.inbound"),
 		touchstone.Provide(),
 		touchhttp.Provide(),
-		basculemetrics.ProvideMetricsVec(),
-		basculechecks.ProvideMetricsVec(),
-		auth.ProvidePrimaryServerChain(apiBase),
 		fx.Provide(
-			backwardsCompatibleMetricFactory("prometheus"),
-			backwardsCompatibleUnmarshaller,
-			backwardsCompatibleLogger,
-			auth.ProfilesUnmarshaler{
-				ConfigKey:        "authx.inbound.profiles",
-				SupportedServers: []string{"primary"}}.Annotated(),
+			consts,
 			arrange.UnmarshalKey("prometheus", touchstone.Config{}),
 			arrange.UnmarshalKey("prometheus.handler", touchhttp.Config{}),
-			arrange.UnmarshalKey("onErrorHTTPResponse", onErrorHTTPResponseConfig{AuthType: "Bearer"}),
-			arrange.UnmarshalKey("parseURL", parseURLConfig{URLPathPrefix: "/"}),
-			metricMiddleware,
-			fx.Annotated{
-				Name:   "primary_bascule_on_error_http_response",
-				Target: onErrorHTTPResponse,
-			},
-			fx.Annotated{
-				Name:   "primary_bascule_parse_url",
-				Target: parseURLFunc,
-			},
 		),
-
-		arrangehttp.Server{
-			Name: "server_primary",
-			Key:  "servers.primary",
-			Inject: arrange.Inject{
-				PrimaryMMIn{},
-			},
-		}.Provide(),
-
-		arrangehttp.Server{
-			Name: "server_health",
-			Key:  "servers.health",
-			Inject: arrange.Inject{
-				HealthMMIn{},
-			},
-			Invoke: arrange.Invoke{
-				func(r *mux.Router) {
-					r.Handle("/health", httpaux.ConstantHandler{
-						StatusCode: http.StatusOK,
-					}).Methods("GET")
-				},
-			},
-		}.Provide(),
-
-		arrangehttp.Server{
-			Name: "server_metrics",
-			Key:  "servers.metrics",
-		}.Provide(),
-
-		fx.Invoke(
-			serverValidator{Key: "servers.primary"}.Validate,
-			serverValidator{Key: "servers.metrics"}.Validate,
-			serverValidator{Key: "servers.health"}.Validate,
-			buildPrimaryRoutes,
-			buildMetricsRoutes,
-		),
+		provideServers(),
 	)
 
 	switch err := app.Err(); {
@@ -143,30 +76,14 @@ func main() {
 	}
 }
 
-func backwardsCompatibleLogger(l *zap.Logger) log.Logger {
-	return sallustkit.Logger{
-		Zap: l,
-	}
+// Provide the constants in the main package for other uber fx components to use.
+type ConstOut struct {
+	fx.Out
+	DefaultKeyID string `name:"default_key_id"`
 }
 
-func backwardsCompatibleUnmarshaller(v *viper.Viper) config.Unmarshaller {
-	return config.ViperUnmarshaller{
-		Viper: v,
-	}
-}
-
-func backwardsCompatibleMetricFactory(configKey string) func(xmetrics.MetricsIn) (xmetrics.Factory, error) {
-	return func(in xmetrics.MetricsIn) (xmetrics.Factory, error) {
-		var o xmetrics.Options
-		if err := in.Unmarshaller.UnmarshalKey(configKey, &o); err != nil {
-			return nil, err
-		}
-
-		registry, err := xmetrics.New(o)
-		if err != nil {
-			return nil, err
-		}
-
-		return registry, nil
+func consts() ConstOut {
+	return ConstOut{
+		DefaultKeyID: defaultKeyID,
 	}
 }
