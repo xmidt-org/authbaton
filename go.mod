@@ -15,5 +15,5 @@ require (
 	github.com/xmidt-org/touchstone v0.0.3
 	github.com/xmidt-org/webpa-common v1.11.7 // indirect
 	go.uber.org/fx v1.18.1
-	go.uber.org/zap v1.16.0
+	go.uber.org/zap v1.22.0
 )
