@@ -9,11 +9,10 @@ require (
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
 	github.com/xmidt-org/arrange v0.3.0
-	github.com/xmidt-org/bascule v0.10.2
+	github.com/xmidt-org/bascule v0.11.0
 	github.com/xmidt-org/httpaux v0.3.2
 	github.com/xmidt-org/sallust v0.1.6
 	github.com/xmidt-org/touchstone v0.1.1
-	github.com/xmidt-org/webpa-common v1.11.7 // indirect
 	go.uber.org/fx v1.18.1
 	go.uber.org/zap v1.22.0
 )
