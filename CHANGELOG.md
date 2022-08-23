@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 - Upgrade bascule and rm undesired deps like argus, webpa-common and themis. [#13](https://github.com/xmidt-org/authbaton/pull/13)
+- Introduce new security vulns
+  - [CVE-2020-26160](https://vuln.whitesourcesoftware.com/vulnerability/CVE-2020-26160)
 
 ## [v0.1.0]
 - Start migrating away from Themis sub-packages. [#6](https://github.com/xmidt-org/authbaton/pull/6)
