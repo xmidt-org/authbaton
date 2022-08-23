@@ -3,6 +3,7 @@ module github.com/xmidt-org/authbaton
 go 1.15
 
 require (
+	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/justinas/alice v1.2.0
 	github.com/pelletier/go-toml/v2 v2.0.3 // indirect
@@ -13,7 +14,7 @@ require (
 	github.com/stretchr/testify v1.8.0
 	github.com/subosito/gotenv v1.4.1 // indirect
 	github.com/xmidt-org/arrange v0.3.0
-	github.com/xmidt-org/bascule v0.10.0
+	github.com/xmidt-org/bascule v0.10.2
 	github.com/xmidt-org/httpaux v0.3.2
 	github.com/xmidt-org/sallust v0.1.6
 	github.com/xmidt-org/touchstone v0.0.3
