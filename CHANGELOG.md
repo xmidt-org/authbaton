@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [v0.1.2]
+- Very minor update testing docker deployment.
+- Update zap to 1.23.0 [#33](https://github.com/xmidt-org/authbaton/pull/33)
+
 ## [v0.1.1]
 - Upgrade bascule and rm undesired deps like argus, webpa-common and themis. [#13](https://github.com/xmidt-org/authbaton/pull/13)
 - revert touchstone to v0.0.3 [29](https://github.com/xmidt-org/authbaton/issues/29)
@@ -22,7 +26,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [v0.0.1]
 - Initial creation
 
-[Unreleased]: https://github.com/xmidt-org/authbaton/compare/v0.1.1...HEAD
-[v0.1.0]: https://github.com/xmidt-org/authbaton/compare/0.1.0...v0.1.1
+[Unreleased]: https://github.com/xmidt-org/authbaton/compare/v0.1.2...HEAD
+[v0.1.2]: https://github.com/xmidt-org/authbaton/compare/0.1.1...v0.1.2
+[v0.1.1]: https://github.com/xmidt-org/authbaton/compare/0.1.0...v0.1.1
 [v0.1.0]: https://github.com/xmidt-org/authbaton/compare/0.0.1...v0.1.0
 [v0.0.1]: https://github.com/xmidt-org/authbaton/compare/0.0.0...v0.0.1
