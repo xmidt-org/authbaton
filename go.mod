@@ -19,7 +19,7 @@ require (
 	github.com/xmidt-org/sallust v0.1.6
 	github.com/xmidt-org/touchstone v0.0.3
 	go.uber.org/atomic v1.10.0 // indirect
-	go.uber.org/fx v1.18.1
+	go.uber.org/fx v1.18.2
 	go.uber.org/zap v1.23.0
 	golang.org/x/sys v0.0.0-20220818161305-2296e01440c6 // indirect
 	golang.org/x/xerrors v0.0.0-20220609144429-65e65417b02f // indirect
