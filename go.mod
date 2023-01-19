@@ -7,9 +7,10 @@ require (
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
 	github.com/gorilla/mux v1.8.0
 	github.com/justinas/alice v1.2.0
+	github.com/pelletier/go-toml v1.9.5 // indirect
 	github.com/prometheus/client_golang v1.13.0 // indirect
 	github.com/spf13/pflag v1.0.5
-	github.com/spf13/viper v1.14.0
+	github.com/spf13/viper v1.15.0
 	github.com/stretchr/testify v1.8.1
 	github.com/xmidt-org/arrange v0.3.0
 	github.com/xmidt-org/bascule v0.10.2
