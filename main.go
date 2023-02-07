@@ -22,13 +22,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/spf13/pflag"
 	"github.com/xmidt-org/arrange"
 	"github.com/xmidt-org/touchstone"
-
 	"github.com/xmidt-org/touchstone/touchhttp"
-
-	"github.com/spf13/pflag"
-
 	"go.uber.org/fx"
 )
 
@@ -44,10 +41,18 @@ var (
 )
 
 func main() {
-	v, logger, err := setup(os.Args[1:])
+	err := authbaton(os.Args[1:], true)
+
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
+	}
+}
+
+func authbaton(args []string, run bool) error {
+	v, logger, err := setup(args)
+	if err != nil {
+		return err
 	}
 	app := fx.New(
 		arrange.LoggerFunc(logger.Sugar().Infof),
@@ -65,15 +70,16 @@ func main() {
 		provideServers(),
 	)
 
-	switch err := app.Err(); {
-	case errors.Is(err, pflag.ErrHelp):
-		return
-	case err == nil:
+	err = app.Err()
+
+	switch {
+	case err == nil && run:
 		app.Run()
+	case errors.Is(err, pflag.ErrHelp):
+		err = nil
 	default:
-		fmt.Fprintln(os.Stderr, err)
-		os.Exit(2)
 	}
+	return err
 }
 
 // Provide the constants in the main package for other uber fx components to use.
