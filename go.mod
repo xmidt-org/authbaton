@@ -13,7 +13,7 @@ require (
 	github.com/stretchr/testify v1.8.4
 	github.com/xmidt-org/arrange v0.4.0
 	github.com/xmidt-org/bascule v0.10.2
-	github.com/xmidt-org/httpaux v0.3.2
+	github.com/xmidt-org/httpaux v0.4.0
 	github.com/xmidt-org/sallust v0.2.0
 	github.com/xmidt-org/touchstone v0.0.3
 	go.uber.org/fx v1.20.0
