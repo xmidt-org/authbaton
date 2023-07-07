@@ -1472,8 +1472,9 @@ github.com/xmidt-org/bascule v0.9.0/go.mod h1:C64nSBtUTTK/f2/mCvvp/qJhav5raD0T+b
 github.com/xmidt-org/bascule v0.10.2 h1:Z51Qu4BAh/tk4fccQ/Xv3gCuqjYcPKZ8kYCw03rgjYM=
 github.com/xmidt-org/bascule v0.10.2/go.mod h1:8Mx4EW1AXTWnvh2rDl+/GYPLH4QSJIuPB6r94IWoKxg=
 github.com/xmidt-org/httpaux v0.1.2/go.mod h1:qZnH2uObGPwHnOz8HcPNlbcd3gKEvdmxbIK3rgbQhto=
-github.com/xmidt-org/httpaux v0.3.2 h1:CC8FPiGVtThSRj3fEr9lk2e1bzhhw+l6Vb3BfzfaMG0=
 github.com/xmidt-org/httpaux v0.3.2/go.mod h1:qmlPisXf80FTi3y4gX43eYbCVruSQyvu+FPx1jzvQG8=
+github.com/xmidt-org/httpaux v0.4.0 h1:cAL/MzIBpSsv4xZZeq/Eu1J5M3vfNe49xr41mP3COKU=
+github.com/xmidt-org/httpaux v0.4.0/go.mod h1:UypqZwuZV1nn8D6+K1JDb+im9IZrLNg/2oO/Bgiybxc=
 github.com/xmidt-org/sallust v0.1.5/go.mod h1:azcKBypudADIeZ3Em8zGjVq3yQ7n4ueSvM/degHMIxo=
 github.com/xmidt-org/sallust v0.2.0 h1:XyRLZKNK7cq+mU9bNKtMt8nxJu/tv92gpYAUw7ClP4c=
 github.com/xmidt-org/sallust v0.2.0/go.mod h1:HCQQn7po8czynjxtNVyZ5vzWuTqJyJwnPWkQoqBX67s=
