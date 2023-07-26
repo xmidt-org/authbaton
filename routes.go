@@ -67,6 +67,7 @@ func handledMetricEndpoint(in MetricsRoutesIn) {
 }
 
 func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
+	//need to use NewIntstrumenter --> func(factory) instrumenter, error
 	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
 	out.Health = alice.New(bundle.ForServer("server_health").Then)
 	return
