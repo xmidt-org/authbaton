@@ -66,17 +66,27 @@ func handledMetricEndpoint(in MetricsRoutesIn) {
 	in.Router.Handle("/metrics", in.Handler).Methods("GET")
 }
 
-func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
-	//need to use NewIntstrumenter --> func(factory) instrumenter, error
-	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
-	out.Health = alice.New(bundle.ForServer("server_health").Then)
-	return
-}
+// func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
+// 	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
+// 	out.Health = alice.New(bundle.ForServer("server_health").Then)
+// 	return
+// }
 
 func provideServers() fx.Option {
 	return fx.Options(
 		fx.Provide(
-			metricMiddleware,
+			fx.Annotated{
+				Name: "server_primary",
+				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+					touchhttp.ServerLabel, "server_primary",
+				),
+			},
+			fx.Annotated{
+				Name: "server_health",
+				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+					touchhttp.ServerLabel, "server_health",
+				),
+			},
 		),
 		arrangehttp.Server{
 			Name: "server_primary",
