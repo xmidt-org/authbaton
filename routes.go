@@ -74,20 +74,6 @@ func handledMetricEndpoint(in MetricsRoutesIn) {
 
 func provideServers() fx.Option {
 	return fx.Options(
-		fx.Provide(
-			fx.Annotated{
-				Name: "server_primary",
-				Target: touchhttp.ServerBundle{}.NewInstrumenter(
-					touchhttp.ServerLabel, "server_primary",
-				),
-			},
-			fx.Annotated{
-				Name: "server_health",
-				Target: touchhttp.ServerBundle{}.NewInstrumenter(
-					touchhttp.ServerLabel, "server_health",
-				),
-			},
-		),
 		arrangehttp.Server{
 			Name: "server_primary",
 			Key:  "servers.primary",
@@ -119,6 +105,38 @@ func provideServers() fx.Option {
 			serverValidator{Key: "servers.health"}.Validate,
 			handlePrimaryEndpoint,
 			handledMetricEndpoint,
+		),
+	)
+}
+
+func Provide() fx.Option{
+	return fx.Module("middleware",
+		fx.Provide(
+			fx.Annotated{
+				Name: "server_primary",
+				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+					touchhttp.ServerLabel, "server_primary",
+				),
+			},
+			fx.Annotated{
+				Name: "server_health",
+				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+					touchhttp.ServerLabel, "server_health",
+				),
+			},
+		),
+		fx.Invoke(
+			
+		)
+
+	)
+}
+func provideMiddleware() fx.Option {
+	return fx.Options(
+		fx.Provide(
+		),
+		fx.Invoke(
+
 		),
 	)
 }
