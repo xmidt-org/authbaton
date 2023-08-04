@@ -78,18 +78,19 @@ func provideMetricMiddleware(in MetricMiddlewareIn) (out MetricMiddlewareOut) {
 }
 
 func provideServers() fx.Option {
+	var bundle touchhttp.ServerBundle
 	return fx.Options(
 		fx.Provide(
 			provideMetricMiddleware,
 			fx.Annotated{
 				Name: "instrumenter_primary",
-				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+				Target: bundle.NewInstrumenter(
 					touchhttp.ServerLabel, "server_primary",
 				),
 			},
 			fx.Annotated{
 				Name: "instrumenter_health",
-				Target: touchhttp.ServerBundle{}.NewInstrumenter(
+				Target: bundle.NewInstrumenter(
 					touchhttp.ServerLabel, "server_health",
 				),
 			},
