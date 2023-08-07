@@ -51,6 +51,11 @@ type HealthMMIn struct {
 	Health alice.Chain `name:"middleware_health_metrics"`
 }
 
+type MetricMiddlewareIn struct {
+	fx.In
+	Primary touchhttp.ServerInstrumenter `name:"instrumenter_primary"`
+	Health  touchhttp.ServerInstrumenter `name:"instrumenter_health"`
+}
 type MetricMiddlewareOut struct {
 	fx.Out
 	Primary alice.Chain `name:"middleware_primary_metrics"`
@@ -66,16 +71,29 @@ func handledMetricEndpoint(in MetricsRoutesIn) {
 	in.Router.Handle("/metrics", in.Handler).Methods("GET")
 }
 
-func metricMiddleware(bundle touchhttp.ServerBundle) (out MetricMiddlewareOut) {
-	out.Primary = alice.New(bundle.ForServer("server_primary").Then)
-	out.Health = alice.New(bundle.ForServer("server_health").Then)
-	return
+func provideMetricMiddleware(in MetricMiddlewareIn) (out MetricMiddlewareOut) {
+	out.Primary = alice.New(in.Primary.Then)
+	out.Health = alice.New(in.Health.Then)
+	return out
 }
 
 func provideServers() fx.Option {
+	var bundle touchhttp.ServerBundle
 	return fx.Options(
 		fx.Provide(
-			metricMiddleware,
+			provideMetricMiddleware,
+			fx.Annotated{
+				Name: "instrumenter_primary",
+				Target: bundle.NewInstrumenter(
+					touchhttp.ServerLabel, "server_primary",
+				),
+			},
+			fx.Annotated{
+				Name: "instrumenter_health",
+				Target: bundle.NewInstrumenter(
+					touchhttp.ServerLabel, "server_health",
+				),
+			},
 		),
 		arrangehttp.Server{
 			Name: "server_primary",
