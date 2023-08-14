@@ -27,10 +27,10 @@ import (
 
 // sentinel validation errors
 var (
-	errServerConfigMissing          = errors.New("Missing server config")
-	errServerConfigUnmarshalFailure = errors.New("Failed to unmarshal server config")
-	errServerAddressBadFormat       = errors.New("Server address format must be [host]:[port]")
-	errServerAddressNonLoopback     = errors.New("Server address must be a loopback address")
+	errServerConfigMissing          = errors.New("missing server config")
+	errServerConfigUnmarshalFailure = errors.New("failed to unmarshal server config")
+	errServerAddressBadFormat       = errors.New("server address format must be [host]:[port]")
+	errServerAddressNonLoopback     = errors.New("server address must be a loopback address")
 )
 
 type server struct {
