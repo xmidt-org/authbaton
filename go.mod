@@ -12,7 +12,7 @@ require (
 	github.com/xmidt-org/bascule v0.11.6
 	github.com/xmidt-org/httpaux v0.4.0
 	github.com/xmidt-org/sallust v0.2.2
-	github.com/xmidt-org/touchstone v0.1.2
+	github.com/xmidt-org/touchstone v0.1.3
 	go.uber.org/fx v1.20.0
 	go.uber.org/zap v1.26.0
 )
