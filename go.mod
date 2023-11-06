@@ -3,7 +3,7 @@ module github.com/xmidt-org/authbaton
 go 1.19
 
 require (
-	github.com/gorilla/mux v1.8.0
+	github.com/gorilla/mux v1.8.1
 	github.com/justinas/alice v1.2.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.16.0
